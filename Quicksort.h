@@ -6,6 +6,7 @@
 
 // Various ways to select the pivot value.
 long pivot_first_element(std::vector<int>&, int, int);
+long pivot_random_element(std::vector<int>&, int, int);
 long pivot_median_of_three(std::vector<int>&, int, int);
 
 
