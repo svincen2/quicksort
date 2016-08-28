@@ -21,7 +21,6 @@ SCENARIO("Generating random integers") {
 					counts[*p]++;
 				}
 				for (int i = 0; i != counts.size(); ++i) {
-					std::cout << "i: " << i << '\n';
 					REQUIRE(counts[i] > 0);
 				}
 			}
