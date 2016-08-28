@@ -1,6 +1,8 @@
-#include "Quicksort.h"
 #include "Insertion_sort.h"
-#include <cstdlib> // For rand()
+#include "Quicksort.h"
+#include "Random.h"
+#include <algorithm> // For swap.
+#include <tuple>
 
 
 /* Pivot function definitions. */
@@ -22,6 +24,7 @@ long pivot_first_element(std::vector<int>& vec, int begin, int end)
 
 /*
 * Use a random element in the vector as the pivot value.
+* The pivot value will be placed in first position of the given vector.
 * params:
 *	vec - Vector of ints.
 *	begin - Beginning of range.
@@ -31,13 +34,17 @@ long pivot_first_element(std::vector<int>& vec, int begin, int end)
 */
 long pivot_random_element(std::vector<int>& vec, int begin, int end)
 {
-	return vec[begin + (rand() % (end - begin))];
+	Random<int> rnd{begin, end - 1};
+	std::swap(vec[begin], vec[rnd.value()]);
+	return vec[begin];
 }
 
 
 /*
 * Use the median of the first, last, and middle element in the
 * given vector as the pivot value.
+* Once found, the pivot value will be placed in the first position of
+* the given vector.
 * params:
 *	vec - Vector of ints.
 * return:
@@ -45,10 +52,18 @@ long pivot_random_element(std::vector<int>& vec, int begin, int end)
 */
 long pivot_median_of_three(std::vector<int>& vec, int begin, int end)
 {
-	long first{vec[begin]};
-	long middle{vec[begin + ((end - begin) / 2)]};
-	long last{vec[end - 1]};
-	return (first + middle + last) / 3;
+	auto cmp{[](std::tuple<int, int>& a, std::tuple<int, int>& b) {
+		return std::get<1>(a) <= std::get<1>(b);
+	}};
+
+	int mid{begin + (end - begin) / 2};
+	std::vector<std::tuple<int, int>> samples{};
+	samples.push_back(std::tuple<int, int>{begin, vec[begin]});
+	samples.push_back(std::tuple<int, int>{mid, vec[mid]});
+	samples.push_back(std::tuple<int, int>{end - 1, vec[end - 1]});
+	std::sort(samples.begin(), samples.end(), cmp);
+	std::swap(vec[begin], vec[std::get<0>(samples[1])]);
+	return vec[begin];
 }
 
 
@@ -82,7 +97,7 @@ int hoare_partition(std::vector<int>& vec,
 			std::swap(vec[i], vec[j]);
 		}
 		else if (i >= j) {
-			// Assumes pivot was first element.
+			// Assumes pivot is always first element.
 			std::swap(vec[j], vec[begin]);
 		}
 	}
@@ -90,9 +105,11 @@ int hoare_partition(std::vector<int>& vec,
 }
 
 
+/*
+* Needs implementation
+*/
 int lumotu_partition(std::vector<int>&vec, int begin, int end, int pivot_value)
 {
-	// Needs implementation.
 }
 
 
@@ -120,8 +137,9 @@ Quicksort::Quicksort()
 */
 void Quicksort::sort(std::vector<int>& vec, int begin, int end) const
 {
-	if (begin >= end - 1) return;
-	if (vec.size() <= threshold) {
+	int count{end - begin};
+	if (count <= 1) return;
+	if (count <= threshold) {
 		insertion_sort(vec);
 	}
 	else {
