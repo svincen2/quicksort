@@ -1,7 +1,6 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <cstdlib> // For rand()
 #include <ostream>
 #include <vector>
 #include "Timer.h"
@@ -18,7 +17,7 @@ long time(T func)
 	Timer t{};
 	t.start();
 	func();
-	return t.elapsed();
+	return t.ms_elapsed();
 }
 
 
@@ -37,10 +36,6 @@ void print_vector(std::vector<T>& vec, std::ostream& os)
 	}
 	os << '\n';
 }
-
-
-// Generate a vector of random ints.
-std::vector<int> random_vec_of_size(int, int);
 
 #endif
 

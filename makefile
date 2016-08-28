@@ -1,5 +1,5 @@
 proj_name = quicksort
-objs = Quicksort.o Insertion_sort.o Util.o main.o
+objs = Quicksort.o Insertion_sort.o main.o
 
 # Commands.
 compile = g++ -std=c++11 -c
@@ -14,9 +14,6 @@ Insertion_sort.o: Insertion_sort.h Insertion_sort.cpp
 
 Quicksort.o: Quicksort.h Quicksort.cpp
 	$(compile) Quicksort.cpp
-
-Util.o: Util.h Util.cpp
-	$(compile) Util.cpp
 
 main.o: main.cpp
 	$(compile) main.cpp

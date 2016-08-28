@@ -1,14 +1,15 @@
 #include "catch.hpp"
 #include "Quicksort.h"
-#include "Util.h"
+#include "Random.h"
 #include <iostream>
 #include <vector>
 
 
 SCENARIO("Sorting with quicksort") {
 	GIVEN("A vector of random integers") {
-		srand(2);
-		std::vector<int> vec{random_vec_of_size(100, 100)};
+		Random<int> rnd{1, 100};
+		rnd.seed(26);
+		std::vector<int> vec{rnd.vector(100)};
 		WHEN("Sorted using quicksort") {
 			Quicksort sorter{};
 			sorter.sort(vec, 0, vec.size());

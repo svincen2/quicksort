@@ -1,5 +1,6 @@
 #include "Insertion_sort.h"
 #include "Quicksort.h"
+#include "Random.h"
 #include "Util.h"
 #include <iostream>
 #include <vector>
@@ -19,14 +20,17 @@
 */
 void investigate_quicksort_variations()
 {
-	srand(26); // Seed random for testing.
-	std::vector<int> vec{random_vec_of_size(100000, 100)};
+	Random<int> rnd{-10, 10};
+	
+	std::vector<int> vec{rnd.vector(10)};
+	print_vector(vec, std::cout);
 	long elapsed{};
 
 	Quicksort sorter{};
 	elapsed = time([sorter, &vec]() {
 		sorter.sort(vec, 0, vec.size());
 	});
+	print_vector(vec, std::cout);
 	std::cout << "time (ms): " << elapsed << '\n';
 }
 
