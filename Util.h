@@ -8,7 +8,9 @@
 
 
 /*
-* Time the given function.
+* Time the execution of the given function.
+* params:
+*	func - Function to execute.
 */
 template<typename T>
 long time(T func)
