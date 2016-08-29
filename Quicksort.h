@@ -40,7 +40,7 @@ public:
 	// Mutators.
 	void set_pivot_func(Pivot_func p) { pivot = p; }
 	void set_partition_func(Partition_func p) { partition = p; }
-	void set_partition_threshold(int t) { threshold = t; }
+	void set_threshold(int t) { threshold = t; }
 
 private:
 	// Functions used in the quicksort algorithm.

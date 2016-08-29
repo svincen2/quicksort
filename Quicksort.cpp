@@ -110,6 +110,14 @@ int hoare_partition(std::vector<int>& vec,
 */
 int lumotu_partition(std::vector<int>&vec, int begin, int end, int pivot_value)
 {
+	int split{begin};
+	for (int i = begin + 1; i != end; ++i) {
+		if (vec[i] < pivot_value) {
+			std::swap(vec[++split], vec[i]);
+		}
+	}
+	std::swap(vec[begin], vec[split]);
+	return split;
 }
 
 
@@ -140,7 +148,7 @@ void Quicksort::sort(std::vector<int>& vec, int begin, int end) const
 	int count{end - begin};
 	if (count <= 1) return;
 	if (count <= threshold) {
-		insertion_sort(vec);
+		insertion_sort(vec, begin, end);
 	}
 	else {
 		long pivot_value{pivot(vec, begin, end)};
