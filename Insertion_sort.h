@@ -5,7 +5,7 @@
 
 
 // Insertion sort algorithm.
-void insertion_sort(std::vector<int>&);
+void insertion_sort(std::vector<int>&, int, int);
 
 #endif
 
