@@ -7,6 +7,29 @@
 
 
 /*
+* Investigate the running time of a variation of quicksort.
+* params:
+*	pivot - Function to select the pivot value.
+*	partition - Function to partition a range.
+*	vec - Vector of random integers.
+*	sorter - Quicksort instance which will sort the vector.
+*/
+void investigate(Quicksort::Pivot_func pivot,
+				 Quicksort::Partition_func partition,
+				 const std::vector<int>& vec,
+				 Quicksort& sorter)
+{
+	std::vector<int> vec_copy{vec};
+	sorter.set_partition_func(partition);
+	sorter.set_pivot_func(pivot);
+	long elapsed = time([sorter, &vec_copy]() {
+		sorter.sort(vec_copy, 0, vec_copy.size());
+	});
+	std::cout << "time(ms):  " << elapsed << '\n';
+}
+
+
+/*
 * Investigates the effects on efficiency of variations to quicksort.
 * Items investigated:
 * - Choosing a pivot value:
@@ -20,18 +43,26 @@
 */
 void investigate_quicksort_variations()
 {
-	Random<int> rnd{-10, 10};
-	
-	std::vector<int> vec{rnd.vector(10)};
-	print_vector(vec, std::cout);
-	long elapsed{};
+	Random<int> rnd{1, 100000};
+	std::vector<int> vec{rnd.vector(1000000)};
 
 	Quicksort sorter{};
-	elapsed = time([sorter, &vec]() {
-		sorter.sort(vec, 0, vec.size());
-	});
-	print_vector(vec, std::cout);
-	std::cout << "time (ms): " << elapsed << '\n';
+	std::cout << "Lumotu partition, pivot: first, random, median\n";
+	investigate(&pivot_first_element, &lumotu_partition, vec, sorter);
+	investigate(&pivot_random_element, &lumotu_partition, vec, sorter);
+	investigate(&pivot_median_of_three, &lumotu_partition, vec, sorter);
+
+	std::cout << "Hoare partition, pivot: first, random, median\n";
+	investigate(&pivot_first_element, &hoare_partition, vec, sorter);
+	investigate(&pivot_random_element, &hoare_partition, vec, sorter);
+	investigate(&pivot_median_of_three, &hoare_partition, vec, sorter);
+
+	std::cout << "Switch to insertion sort.\n";
+	for (int i = 5; i < 30; ++i) {
+		std::cout << "threshold: " << i << ", ";
+		sorter.set_threshold(i);
+		investigate(&pivot_first_element, &hoare_partition, vec, sorter);
+	}
 }
 
 
