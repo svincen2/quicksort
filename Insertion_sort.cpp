@@ -15,9 +15,8 @@ void insertion_sort(std::vector<int>& vec, int begin, int end)
 				std::swap(vec[j], vec[j - 1]);
 			}
 			else {
-				break; 
+				break;
 			}
 		}
 	}
 }
-

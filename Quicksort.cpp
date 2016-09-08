@@ -2,7 +2,7 @@
 #include "Quicksort.h"
 #include "Random.h"
 #include <algorithm> // For swap.
-#include <tuple>
+#include <cstdlib>   // For rand.
 
 
 /* Pivot function definitions. */
@@ -34,8 +34,7 @@ long pivot_first_element(std::vector<int>& vec, int begin, int end)
 */
 long pivot_random_element(std::vector<int>& vec, int begin, int end)
 {
-	Random<int> rnd{begin, end - 1};
-	std::swap(vec[begin], vec[rnd.value()]);
+	std::swap(vec[begin], vec[begin + (rand() % (end - begin))]);
 	return vec[begin];
 }
 
@@ -52,17 +51,32 @@ long pivot_random_element(std::vector<int>& vec, int begin, int end)
 */
 long pivot_median_of_three(std::vector<int>& vec, int begin, int end)
 {
-	auto cmp{[](std::tuple<int, int>& a, std::tuple<int, int>& b) {
-		return std::get<1>(a) <= std::get<1>(b);
-	}};
-
-	int mid{begin + (end - begin) / 2};
-	std::vector<std::tuple<int, int>> samples{};
-	samples.push_back(std::tuple<int, int>{begin, vec[begin]});
-	samples.push_back(std::tuple<int, int>{mid, vec[mid]});
-	samples.push_back(std::tuple<int, int>{end - 1, vec[end - 1]});
-	std::sort(samples.begin(), samples.end(), cmp);
-	std::swap(vec[begin], vec[std::get<0>(samples[1])]);
+	int pivot_index{};
+	int middle{begin + (end - begin) / 2};
+	int last{end - 1};
+	if (vec[begin] <= vec[middle] && vec[begin] <= vec[last]) {
+		// First is smallest, return min of middle, last
+		if (vec[middle] <= vec[last]) {
+			pivot_index = middle;
+		}
+		else {
+			pivot_index = last;
+		}
+	}
+	else if (vec[begin] >= vec[middle] && vec[begin] >= vec[last]) {
+		// First is largest, return max of middle, last.
+		if (vec[middle] >= vec[last]) {
+			pivot_index = middle;
+		}
+		else {
+			pivot_index = last;
+		}
+	}
+	else {
+		// First is the median.
+		pivot_index = begin;
+	}
+	std::swap(vec[begin], vec[pivot_index]);
 	return vec[begin];
 }
 
@@ -97,7 +111,6 @@ int hoare_partition(std::vector<int>& vec,
 			std::swap(vec[i], vec[j]);
 		}
 		else if (i >= j) {
-			// Assumes pivot is always first element.
 			std::swap(vec[j], vec[begin]);
 		}
 	}
@@ -106,9 +119,20 @@ int hoare_partition(std::vector<int>& vec,
 
 
 /*
-* Needs implementation
+* Partition the range [begin, end) based on the pivot value,
+* moving from the 'left' or lower end of the range only.
+* params:
+*	begin - Index of first element in the range.
+*	end - Index of one past the last element in the range.
+*	pivot_value - The value used to partition the range.
+* return:
+*	int - Index of the mid-point of the partition.
+*	      Everything before this point will be less than the
+*	      pivot value.
+*	      Everything after this point will be greater or equal
+*	      to the pivot value.
 */
-int lumotu_partition(std::vector<int>&vec, int begin, int end, int pivot_value)
+int lomuto_partition(std::vector<int>&vec, int begin, int end, int pivot_value)
 {
 	int split{begin};
 	for (int i = begin + 1; i != end; ++i) {
@@ -157,4 +181,3 @@ void Quicksort::sort(std::vector<int>& vec, int begin, int end) const
 		sort(vec, split + 1, end);
 	}
 }
-

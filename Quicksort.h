@@ -12,8 +12,7 @@ long pivot_median_of_three(std::vector<int>&, int, int);
 
 // Various ways to partition the vector.
 int hoare_partition(std::vector<int>&, int, int, int);
-int lumotu_partition(std::vector<int>&, int, int, int);
-// ?? What other ways can we partition the vector ??
+int lomuto_partition(std::vector<int>&, int, int, int);
 	
 
 /*
@@ -52,4 +51,3 @@ private:
 };
 
 #endif
-

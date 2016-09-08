@@ -40,17 +40,20 @@ void investigate(Quicksort::Pivot_func pivot,
 *	- Sweep from the 'left' only.
 * - Finish with insertion sort:
 *	- Find optimal time to switch to insertion sort.
+* params:
+*	max - Maximum value of a randomly generated integer.
+*	size - Size of the list to sort.
 */
-void investigate_quicksort_variations()
+void investigate_quicksort_variations(const int max, const int size)
 {
-	Random<int> rnd{1, 100000};
-	std::vector<int> vec{rnd.vector(1000000)};
+	Random<int> rnd{1, max};
+	std::vector<int> vec{rnd.vector(size)};
 
 	Quicksort sorter{};
-	std::cout << "Lumotu partition, pivot: first, random, median\n";
-	investigate(&pivot_first_element, &lumotu_partition, vec, sorter);
-	investigate(&pivot_random_element, &lumotu_partition, vec, sorter);
-	investigate(&pivot_median_of_three, &lumotu_partition, vec, sorter);
+	std::cout << "Lomuto partition, pivot: first, random, median\n";
+	investigate(&pivot_first_element, &lomuto_partition, vec, sorter);
+	investigate(&pivot_random_element, &lomuto_partition, vec, sorter);
+	investigate(&pivot_median_of_three, &lomuto_partition, vec, sorter);
 
 	std::cout << "Hoare partition, pivot: first, random, median\n";
 	investigate(&pivot_first_element, &hoare_partition, vec, sorter);
@@ -69,10 +72,12 @@ void investigate_quicksort_variations()
 /*
 * Main entry point into the program.
 */
-int main()
+int main(int argc, char* argv[])
 {
 	try {
-		investigate_quicksort_variations();
+		int int_max{std::stoi(argv[1])};
+		int array_size{std::stoi(argv[2])};
+		investigate_quicksort_variations(int_max, array_size);
 	}
 	catch (std::exception& e) {
 		std::cerr << e.what() << '\n';
@@ -80,4 +85,3 @@ int main()
 	}
 	return 0;
 }
-
